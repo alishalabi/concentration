@@ -1,9 +1,35 @@
 class BoardSquare {
   constructor(element, color){
     this.element = element;
+    this.element.addEventListener("click", this, false);
     this.isFaceUp = false;
     this.isMatched = false;
     this.setColor(color);
+  }
+
+  // Adding functin to handle click notification
+  handleEvent(event){
+    switch (event.type){
+      case "click":
+        if (this.isFaceUp || this.isMatched){
+          return
+        }
+
+        this.isFaceUP = true;
+        this.element.classList.add('flipped');
+        squareFlipped(this);
+    }
+  }
+
+  reset() {
+    this.isFaceUp = false;
+    this.isMatched = false;
+    this.element.classList.remove('flipped');
+  }
+
+  matchFound() {
+    this.isFaceUp = true;
+    this.isMatched = true;
   }
 
   setColor(color) {
@@ -20,7 +46,7 @@ function generateHTMLForBoardSquares() {
 
   for (let i = 0; i < numberOfSquares; i++) {
     squaresHTML +=
-      '<div class="col-3 board-square flipped">\n' +
+      '<div class="col-3 board-square">\n' +
       '<div class="face-container">\n' +
       '<div class="facedown"></div>\n' +
       '<div class="faceup"></div>\n' +
@@ -89,5 +115,32 @@ function setupGame() {
   }
 }
 
-
+// Start the game
 setupGame();
+
+// Adding remaining game logic
+let firstFaceupSquare = null;
+
+function squareFlipped(square) {
+  if (firstFaceupSquare == null){
+    firstFaceupSquare = square;
+    return
+  }
+
+  if (firstFaceupSquare.color == square.color) {
+    firstFaceupSquare.matchFound();
+    square.matchFound();
+
+    firstFaceupSquare = null;
+  } else {
+    const a = firstFaceupSquare;
+    const b = square;
+
+    firstFaceupSquare = null;
+
+    setTimeout(function() {
+      a.reset();
+      b.reset();
+    }, 400);
+  }
+}
