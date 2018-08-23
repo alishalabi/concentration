@@ -1,15 +1,15 @@
 class BoardSquare {
-
-  constuctor(element,color){
+  constructor(element, color){
     this.element = element;
     this.isFaceUp = false;
     this.isMatched = false;
-    this.setColor = color;
+    this.setColor(color);
   }
 
   setColor(color) {
     const faceUpElement = this.element.getElementsByClassName('faceup')[0];
     this.color = color;
+
     faceUpElement.classList.add(color);
   }
 }
@@ -18,10 +18,9 @@ function generateHTMLForBoardSquares() {
   const numberOfSquares = 16;
   let squaresHTML = '';
 
-  // generate HTML for board squares
   for (let i = 0; i < numberOfSquares; i++) {
     squaresHTML +=
-      '<div class="col-3 board-square">\n' +
+      '<div class="col-3 board-square flipped">\n' +
       '<div class="face-container">\n' +
       '<div class="facedown"></div>\n' +
       '<div class="faceup"></div>\n' +
@@ -29,12 +28,9 @@ function generateHTMLForBoardSquares() {
       '</div>\n';
   }
 
-  // insert squares HTML in DOM
   const boardElement = document.getElementById('gameboard');
   boardElement.innerHTML = squaresHTML;
 }
-
-generateHTMLForBoardSquares();
 
 const colorPairs = [];
 
@@ -42,12 +38,11 @@ function generateColorPairs() {
   if (colorPairs.length > 0) {
     return colorPairs;
   } else {
-    // generates matching pair for each color
     for (let i = 0; i < 8; i++) {
       colorPairs.push('color-' + i);
       colorPairs.push('color-' + i);
     }
-
+// For some reason, this is where console.log("hello") fails to print
     return colorPairs;
   }
 }
@@ -75,3 +70,24 @@ function shuffleColors() {
   const colorPairs = generateColorPairs()
   return shuffle(colorPairs);
 }
+
+const boardSquares = [];
+
+function setupGame() {
+  generateHTMLForBoardSquares();
+
+  const randomColorPairs = shuffleColors();
+
+  const squareElements = document.getElementsByClassName("board-square");
+
+  for (let i = 0; i < squareElements.length; i++) {
+
+    const element = squareElements[i];
+    const color = randomColorPairs[i];
+    const square = new BoardSquare(element, color)
+    boardSquares.push(square);
+  }
+}
+
+
+setupGame();
