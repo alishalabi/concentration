@@ -69,3 +69,8 @@
 .color-7 {
   background-color: coral;
 }
+
+#reset-button {
+  margin: 15px auto 0;
+  width: 370px;
+}

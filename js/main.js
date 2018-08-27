@@ -34,8 +34,10 @@ class BoardSquare {
 
   setColor(color) {
     const faceUpElement = this.element.getElementsByClassName('faceup')[0];
-    this.color = color;
 
+    faceUpElement.classList.remove(this.color);
+
+    this.color = color;
     faceUpElement.classList.add(color);
   }
 }
@@ -143,4 +145,25 @@ function squareFlipped(square) {
       b.reset();
     }, 400);
   }
+}
+
+const resetButton = document.getElementById("reset-button");
+resetButton.addEventListener('click', () => {
+  resetGame();
+});
+
+function resetGame() {
+  firstFaceupSquare = null;
+  boardSquares.forEach((square) => {
+    square.reset()
+  });
+  setTimeout(() => {
+    const randomColorPairs = shuffleColors();
+    for (let i = 0; i < boardSquares.length; i++) {
+      const newColor = randomColorPairs[i];
+      const square = boardSquares[i];
+
+      square.setColor(newColor);
+    }
+  }, 500);
 }
